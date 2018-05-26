@@ -13,7 +13,7 @@
 
 - name: Check if downloaded and extracted
   stat:
-    path: "{{ SQOOP_LIB }}/mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}-bin.jar"
+    path: "{{ SQOOP_LIB }}/mysql-connector-java-{{ mysql_connector_version }}-bin.jar"
   register: installed
 
 - name: distribution downloaded
@@ -72,15 +72,15 @@
 #TODO use copy module with remote_src: True once migrate to Ansible 2.x
 - name: MySQL connector installed
   become: yes
-  shell: "cp mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}-bin.jar {{ SQOOP_LIB }}"
+  shell: "cp mysql-connector-java-{{ mysql_connector_version }}-bin.jar {{ SQOOP_LIB }}"
   args:
-    chdir: "{{ sqoop_temporary_dir }}/mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}"
+    chdir: "{{ sqoop_temporary_dir }}/mysql-connector-java-{{ mysql_connector_version }}"
   when: not installed.stat.exists
 
 - name: FIx MySQL connector permission
   become: yes
   file:
-    path: "{{ SQOOP_LIB }}/mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}-bin.jar"
+    path: "{{ SQOOP_LIB }}/mysql-connector-java-{{ mysql_connector_version }}-bin.jar"
     owner: "{{ hadoop_common_user }}"
     group: "{{ hadoop_common_group }}"
   when: not installed.stat.exists
